@@ -32,8 +32,8 @@ jobs:
       - name: Run Trivy vulnerability scan
         run: trivy image myapp:${{ github.sha }} --format json > trivy-report.json
 
-      - name: Copy Trivy report to workflow workspace
-        run: mv trivy-report.json $GITHUB_WORKSPACE/trivy-report.json
+    #   - name: Copy Trivy report to workflow workspace
+    #     run: mv trivy-report.json $GITHUB_WORKSPACE/trivy-report.json
 
       - name: Process vulnerability report
         run: python https://github.com/mikigbo/devops-tools/blob/main/process_vulnerability_report.py $GITHUB_WORKSPACE/trivy-report.json
