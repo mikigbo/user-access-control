@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --require esm"
+    "test": "mocha --require esm test/userRoutes.test.js test/authRoutes.test.js --exit"
   },
   "keywords": [],
   "author": "",

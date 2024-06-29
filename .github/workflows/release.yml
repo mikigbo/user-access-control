@@ -1,0 +1,32 @@
+name: Release Workflow
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build and tag Docker image
+        run: |
+          docker build -t myapp:${{ github.event.release.tag_name }} .
+          docker tag myapp:${{ github.event.release.tag_name }} ghcr.io/${{ github.repository_owner }}/myapp:${{ github.event.release.tag_name }}
+
+      - name: Run final vulnerability scan before release
+        run: trivy image myapp:${{ github.event.release.tag_name }}
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push Docker image to GitHub Container Registry
+        run: docker push ghcr.io/${{ github.repository_owner }}/myapp:${{ github.event.release.tag_name }}
+
+      # Additional deployment steps like updating Kubernetes manifests, etc.
