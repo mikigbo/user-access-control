@@ -30,7 +30,7 @@ jobs:
     #     continue-on-error: false  # Ensure the workflow fails if vulnerabilities are found
 
       - name: Run Trivy vulnerability scan
-        run: docker run myapp:${{ github.sha }} trivy image myapp:${{ github.sha }} --format json > trivy-report.json
+        run: trivy image myapp:${{ github.sha }} --format json > trivy-report.json
 
       - name: Copy Trivy report to workflow workspace
         run: mv trivy-report.json $GITHUB_WORKSPACE/trivy-report.json
