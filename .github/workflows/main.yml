@@ -25,15 +25,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install trivy
 
-    #   - name: Run vulnerability scan
-    #     run: trivy image myapp:${{ github.sha }}
-    #     continue-on-error: false  # Ensure the workflow fails if vulnerabilities are found
-
       - name: Run Trivy vulnerability scan
         run: trivy image myapp:${{ github.sha }} --format json > trivy-report.json
-
-    #   - name: Copy Trivy report to workflow workspace
-    #     run: mv trivy-report.json $GITHUB_WORKSPACE/trivy-report.json
 
       - name: Download process vulnerability report script
         run: curl -o process_vulnerability_report.py https://raw.githubusercontent.com/mikigbo/devops-tools/main/process_vulnerability_report.py
