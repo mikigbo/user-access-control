@@ -39,7 +39,7 @@ jobs:
         run: curl -o process_vulnerability_report.py https://raw.githubusercontent.com/mikigbo/devops-tools/main/process_vulnerability_report.py
 
       - name: Process vulnerability report
-        run: python process_vulnerability_report.py $GITHUB_WORKSPACE/trivy-report.json
+        run: python process_vulnerability_report.py trivy-report.json
 
       - name: Determine success or failure
         run: |
