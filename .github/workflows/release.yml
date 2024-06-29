@@ -24,7 +24,7 @@ jobs:
           sudo apt-get install trivy
 
       - name: Run Trivy vulnerability scan
-        run: trivy image myapp:${{ github.sha }} --format json > trivy-report.json
+        run: trivy image myapp:${{ github.event.release.tag_name }} --format json > trivy-report.json
 
       - name: Download process vulnerability report script
         run: curl -o process_vulnerability_report.py https://raw.githubusercontent.com/mikigbo/devops-tools/main/process_vulnerability_report.py
