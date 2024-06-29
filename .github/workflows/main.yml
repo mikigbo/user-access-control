@@ -25,9 +25,27 @@ jobs:
           sudo apt-get update
           sudo apt-get install trivy
 
-      - name: Run vulnerability scan
-        run: trivy image myapp:${{ github.sha }}
-        continue-on-error: false  # Ensure the workflow fails if vulnerabilities are found
+    #   - name: Run vulnerability scan
+    #     run: trivy image myapp:${{ github.sha }}
+    #     continue-on-error: false  # Ensure the workflow fails if vulnerabilities are found
+
+      - name: Run Trivy vulnerability scan
+        run: docker run myapp:${{ github.sha }} trivy image myapp:${{ github.sha }} --format json > trivy-report.json
+
+      - name: Copy Trivy report to workflow workspace
+        run: mv trivy-report.json $GITHUB_WORKSPACE/trivy-report.json
+
+      - name: Process vulnerability report
+        run: python path/to/your/script.py $GITHUB_WORKSPACE/trivy-report.json
+
+      - name: Determine success or failure
+        run: |
+          if [ $? -eq 0 ]; then
+            echo "Vulnerability check passed. Proceeding with deployment."
+          else
+            echo "Vulnerability check failed. Halting deployment."
+            exit 1
+          fi
 
       - name: Test Docker image
         run:  docker run -e JWT_SECRET=${{ secrets.JWT_SECRET }} myapp:${{ github.sha }} npm test
