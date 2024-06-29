@@ -38,11 +38,11 @@ jobs:
   
       - name: Download Node.js script
         run: |
-          curl -o nodejs/analyzeVulnerabilities.js https://github.com/mikigbo/devops-tools/blob/main/nodejs/analyse_report.js
+          curl -o nodejs/analyzeVulnerabilities.js https://raw.githubusercontent.com/mikigbo/devops-tools/main/nodejs/analyse_report.js
   
       - name: Download package.json
         run: |
-          curl -o nodejs/package.json https://github.com/mikigbo/devops-tools/blob/main/nodejs/package.json
+          curl -o nodejs/package.json https://raw.githubusercontent.com/mikigbo/devops-tools/main/nodejs/package.json
   
       - name: Install Node.js dependencies
         working-directory: nodejs
