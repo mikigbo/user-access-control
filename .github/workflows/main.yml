@@ -1,0 +1,27 @@
+name: CI for Main Branch
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build Docker image
+        run: docker build -t myapp:${{ github.sha }} .
+
+      - name: Test Docker image
+        run: docker run myapp:${{ github.sha }} npm test
+        #continue-on-error: false  # Ensure the workflow fails if tests fail
+
+      - name: Run vulnerability scan
+        run: trivy image myapp:${{ github.sha }}
+        #continue-on-error: false  # Ensure the workflow fails if vulnerabilities are found
