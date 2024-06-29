@@ -13,8 +13,8 @@ jobs:
 
       - name: Build and tag Docker image
         run: |
-          docker build -t myapp:${{ github.event.release.tag_name }} .
-          docker tag myapp:${{ github.event.release.tag_name }} ghcr.io/${{ github.repository_owner }}/myapp:${{ github.event.release.tag_name }}
+          docker build -t user-access:${{ github.event.release.tag_name }} .
+          docker tag user-access:${{ github.event.release.tag_name }} ghcr.io/${{ github.repository_owner }}/user-access:${{ github.event.release.tag_name }}
 
       - name: Install trivy
         run: |
@@ -24,7 +24,7 @@ jobs:
           sudo apt-get install trivy
 
       - name: Run Trivy vulnerability scan
-        run: trivy image myapp:${{ github.event.release.tag_name }} --format json > trivy-report.json
+        run: trivy image user-access:${{ github.event.release.tag_name }} --format json > trivy-report.json
 
       - name: Download process vulnerability report script
         run: curl -o process_vulnerability_report.py https://raw.githubusercontent.com/mikigbo/devops-tools/main/process_vulnerability_report.py
@@ -50,6 +50,6 @@ jobs:
           password: ${{ secrets.GHCR_PAT }}
 
       - name: Push Docker image to GitHub Container Registry
-        run: docker push ghcr.io/${{ github.repository_owner }}/myapp:${{ github.event.release.tag_name }}
+        run: docker push ghcr.io/${{ github.repository_owner }}/user-access:${{ github.event.release.tag_name }}
 
       # Additional deployment steps like updating Kubernetes manifests, etc.
