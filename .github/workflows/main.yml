@@ -35,8 +35,11 @@ jobs:
     #   - name: Copy Trivy report to workflow workspace
     #     run: mv trivy-report.json $GITHUB_WORKSPACE/trivy-report.json
 
+      - name: Download process vulnerability report script
+        run: curl -o process_vulnerability_report.py https://raw.githubusercontent.com/mikigbo/devops-tools/main/process_vulnerability_report.py
+
       - name: Process vulnerability report
-        run: python https://github.com/mikigbo/devops-tools/blob/main/process_vulnerability_report.py $GITHUB_WORKSPACE/trivy-report.json
+        run: python process_vulnerability_report.py $GITHUB_WORKSPACE/trivy-report.json
 
       - name: Determine success or failure
         run: |
