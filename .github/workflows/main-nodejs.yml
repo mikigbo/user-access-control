@@ -50,7 +50,7 @@ jobs:
   
       - name: Run vulnerability analysis
         working-directory: nodejs
-        run: node analyzeVulnerabilities.js trivy-report.json
+        run: node analyzeVulnerabilities.js $GITHUB_WORKSPACE/trivy-report.json
   
 
       - name: Determine success or failure
