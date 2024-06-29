@@ -25,10 +25,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install trivy
 
-      - name: Test Docker image
-        run:  docker run -e JWT_SECRET=${{ secrets.JWT_SECRET }} myapp:${{ github.sha }} npm test
-        #continue-on-error: false  # Ensure the workflow fails if tests fail
-
       - name: Run vulnerability scan
         run: trivy image myapp:${{ github.sha }}
-        #continue-on-error: false  # Ensure the workflow fails if vulnerabilities are found
+        continue-on-error: false  # Ensure the workflow fails if vulnerabilities are found
+
+      - name: Test Docker image
+        run:  docker run -e JWT_SECRET=${{ secrets.JWT_SECRET }} myapp:${{ github.sha }} npm test
+        continue-on-error: false  # Ensure the workflow fails if tests fail
+
