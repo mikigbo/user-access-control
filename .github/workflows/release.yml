@@ -16,8 +16,31 @@ jobs:
           docker build -t myapp:${{ github.event.release.tag_name }} .
           docker tag myapp:${{ github.event.release.tag_name }} ghcr.io/${{ github.repository_owner }}/myapp:${{ github.event.release.tag_name }}
 
-      - name: Run final vulnerability scan before release
-        run: trivy image myapp:${{ github.event.release.tag_name }}
+      - name: Install trivy
+        run: |
+          wget -qO- https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+          echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install trivy
+
+      - name: Run Trivy vulnerability scan
+        run: trivy image myapp:${{ github.sha }} --format json > trivy-report.json
+
+      - name: Download process vulnerability report script
+        run: curl -o process_vulnerability_report.py https://raw.githubusercontent.com/mikigbo/devops-tools/main/process_vulnerability_report.py
+
+      - name: Process vulnerability report
+        run: python process_vulnerability_report.py trivy-report.json
+
+      - name: Determine success or failure
+        run: |
+          if [ $? -eq 0 ]; then
+            echo "Vulnerability check passed. Proceeding with deployment."
+          else
+            echo "Vulnerability check failed. Halting deployment."
+            exit 1
+          fi
+
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
