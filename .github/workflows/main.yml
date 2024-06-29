@@ -19,7 +19,7 @@ jobs:
         run: docker build -t myapp:${{ github.sha }} .
 
       - name: Test Docker image
-        run: docker run myapp:${{ github.sha }} npm test
+        run:  docker run -e JWT_SECRET=${{ secrets.JWT_SECRET }} myapp:${{ github.sha }} npm test
         #continue-on-error: false  # Ensure the workflow fails if tests fail
 
       - name: Run vulnerability scan
