@@ -48,6 +48,9 @@ jobs:
             git checkout cd-release
             git pull origin cd-release
             sed -i "s/tag: .*/tag: \"$TAG\"/" argocd/values.yaml
+            git config user.email "actions@github.com"
+            git config user.name "GitHub Actions"
             git add .
             git commit -m "Update values.yaml for release $TAG"
             git push origin cd-release
+
