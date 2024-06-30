@@ -3,6 +3,3 @@ replicaCount: 1
 image:
   tag: "0.0.22"
 
-config:
-  PORT: "80"
-
