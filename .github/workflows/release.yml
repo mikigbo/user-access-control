@@ -27,6 +27,25 @@ jobs:
       - name: Run Trivy vulnerability scan
         run: trivy image user-access:${{ github.event.release.tag_name }} --format json > trivy-report.json
 
+      - name: Analyse vulnerability report script
+        run: curl -o process_vulnerability_report.py https://raw.githubusercontent.com/mikigbo/devops-tools/main/process_vulnerability_report.py
+
+      - name: Process vulnerability report
+        run: python process_vulnerability_report.py trivy-report.json
+
+      - name: Determine success or failure
+        run: |
+          if [ $? -eq 0 ]; then
+            echo "Vulnerability check passed. Proceeding with deployment."
+          else
+            echo "Vulnerability check failed. Halting deployment."
+            exit 1
+          fi
+
+      - name: delete vulnerability file
+        run: rm trivy-report.json
+
+
       - name: Update values.yaml with release tag
         run: |
             TAG=$(echo "${{ github.event.release.tag_name }}")

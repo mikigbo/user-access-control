@@ -28,7 +28,7 @@
       - name: Run Trivy vulnerability scan
         run: trivy image user-access:${{ github.sha }} --format json > trivy-report.json
 
-      - name: Download process vulnerability report script
+      - name: Analyse vulnerability report script
         run: curl -o process_vulnerability_report.py https://raw.githubusercontent.com/mikigbo/devops-tools/main/process_vulnerability_report.py
 
       - name: Process vulnerability report
