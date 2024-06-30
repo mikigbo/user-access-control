@@ -27,20 +27,6 @@ jobs:
       - name: Run Trivy vulnerability scan
         run: trivy image user-access:${{ github.event.release.tag_name }} --format json > trivy-report.json
 
-    #   - name: Update values.yaml
-    #     run: |
-    #       echo "replicaCount: 1" > argocd/values.yaml
-    #       echo "image:" >> argocd/values.yaml
-    #       echo "  tag: '${{ github.event.release.tag_name }}'" >> argocd/values.yaml
-
-    #   - name: Commit and push values.yaml to cd-release branch
-    #     run: |
-    #       git config --global user.email "actions@github.com"
-    #       git config --global user.name "GitHub Actions"
-    #       git add argocd/values.yaml
-    #       git commit -m "Update values.yaml for release ${{ github.event.release.tag_name }}"
-    #       git push origin HEAD:cd-release
-
       - name: Update values.yaml with release tag
         run: |
             TAG=$(echo "${{ github.event.release.tag_name }}")
@@ -61,7 +47,7 @@ jobs:
             git config user.name "GitHub Actions"
 
             # Commit and push changes
-            git add .
+            git add argocd/values.yaml
             git commit -m "Update values.yaml for release $TAG"
             git push origin cd-release
 
