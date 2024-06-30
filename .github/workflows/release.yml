@@ -80,8 +80,8 @@ jobs:
           git checkout cd-release
           git pull origin cd-release
       
-          # Merge main into cd-release
-          git merge origin/main --allow-unrelated-histories || exit 1
+          # Merge main into cd-release, preferring main's changes in conflicts and allowing unrelated histories
+          git merge origin/main --allow-unrelated-histories -X theirs || exit 1
       
           # Push changes
           git push origin cd-release
