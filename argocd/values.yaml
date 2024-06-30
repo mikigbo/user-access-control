@@ -2,3 +2,6 @@ replicaCount: 1
 
 image:
   tag: "0.0.3"
+
+config:
+  PORT: "80"

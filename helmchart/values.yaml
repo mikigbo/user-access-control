@@ -25,5 +25,5 @@ secret:
   data: {}
 
 config:
-  setting1: "value1"
+  PORT: "80"
   setting2: "value2"
