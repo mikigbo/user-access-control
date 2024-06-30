@@ -63,6 +63,14 @@ jobs:
             # Configure Git
             git config user.email "actions@github.com"
             git config user.name "GitHub Actions"
+
+            # Update the tag in values.yaml
+            sed -i "s/tag: .*/tag: \"$TAG\"/" argocd/values.yaml
+
+            # Commit and push changes
+            git add argocd/values.yaml
+            git commit -m "Update values.yaml for release $TAG"
+            git push origin main
             
             # Fetch and checkout branches
             git fetch origin
@@ -72,11 +80,6 @@ jobs:
             # Merge main into cd-release with unrelated histories allowed
             git merge origin/main --allow-unrelated-histories
 
-            # Update the tag in values.yaml
-            sed -i "s/tag: .*/tag: \"$TAG\"/" argocd/values.yaml
-
             # Commit and push changes
-            git add argocd/values.yaml
-            git commit -m "Update values.yaml for release $TAG"
             git push origin cd-release
 
