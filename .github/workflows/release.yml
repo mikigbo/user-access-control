@@ -81,7 +81,7 @@ jobs:
           git pull origin cd-release
       
           # Merge main into cd-release
-          git merge main || exit 1
+          git merge origin/main --allow-unrelated-histories || exit 1
       
           # Push changes
           git push origin cd-release
