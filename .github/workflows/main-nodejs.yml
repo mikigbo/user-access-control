@@ -1,4 +1,4 @@
-name: CI for Main Branch
+name: CI for Main Branch using node js
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v2
 
       # - name: Build Docker image
-      #   run: docker build -t myapp:${{ github.sha }} .
+      #   run: docker build -t user-access:${{ github.sha }} .
 
       # - name: Install trivy
       #   run: |
@@ -26,7 +26,7 @@ jobs:
       #     sudo apt-get install trivy
 
       # - name: Run Trivy vulnerability scan
-      #   run: trivy image myapp:${{ github.sha }} --format json > trivy-report.json
+      #   run: trivy image user-access:${{ github.sha }} --format json > trivy-report.json
 
       # - name: Set up Node.js
       #   uses: actions/setup-node@v3
@@ -63,6 +63,6 @@ jobs:
       #     fi
 
       # - name: Test Docker image
-      #   run:  docker run -e JWT_SECRET=${{ secrets.JWT_SECRET }} myapp:${{ github.sha }} npm test
+      #   run:  docker run -e JWT_SECRET=${{ secrets.JWT_SECRET }} user-access:${{ github.sha }} npm test
       #   continue-on-error: false  # Ensure the workflow fails if tests fail
 
