@@ -59,6 +59,10 @@ jobs:
       - name: Update values.yaml with release tag
         run: |
             TAG=$(echo "${{ github.event.release.tag_name }}")
+
+            # Configure Git
+            git config user.email "actions@github.com"
+            git config user.name "GitHub Actions"
             
             # Fetch and checkout branches
             git fetch origin
@@ -70,10 +74,6 @@ jobs:
 
             # Update the tag in values.yaml
             sed -i "s/tag: .*/tag: \"$TAG\"/" argocd/values.yaml
-
-            # Configure Git
-            git config user.email "actions@github.com"
-            git config user.name "GitHub Actions"
 
             # Commit and push changes
             git add argocd/values.yaml
