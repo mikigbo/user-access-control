@@ -27,16 +27,46 @@ jobs:
       - name: Run Trivy vulnerability scan
         run: trivy image user-access:${{ github.event.release.tag_name }} --format json > trivy-report.json
 
-      - name: Update values.yaml
-        run: |
-          echo "replicaCount: 1" > argocd/values.yaml
-          echo "image:" >> argocd/values.yaml
-          echo "  tag: '${{ github.event.release.tag_name }}'" >> argocd/values.yaml
+      - name: Analyse vulnerability report script
+        run: curl -o process_vulnerability_report.py https://raw.githubusercontent.com/mikigbo/devops-tools/main/process_vulnerability_report.py
 
-      - name: Commit and push values.yaml to cd-release branch
+      - name: Process vulnerability report
+        run: python process_vulnerability_report.py trivy-report.json
+
+      - name: Determine success or failure
         run: |
-          git config --global user.email "actions@github.com"
-          git config --global user.name "GitHub Actions"
-          git add argocd/values.yaml
-          git commit -m "Update values.yaml for release ${{ github.event.release.tag_name }}"
-          git push origin HEAD:cd-release
+          if [ $? -eq 0 ]; then
+            echo "Vulnerability check passed. Proceeding with deployment."
+          else
+            echo "Vulnerability check failed. Halting deployment."
+            exit 1
+          fi
+
+      - name: delete vulnerability file
+        run: rm trivy-report.json
+
+
+      - name: Update values.yaml with release tag
+        run: |
+            TAG=$(echo "${{ github.event.release.tag_name }}")
+            
+            # Fetch and checkout branches
+            git fetch origin
+            git checkout cd-release
+            git pull origin cd-release
+
+            # Merge main into cd-release
+            git merge origin/main
+
+            # Update the tag in values.yaml
+            sed -i "s/tag: .*/tag: \"$TAG\"/" argocd/values.yaml
+
+            # Configure Git
+            git config user.email "actions@github.com"
+            git config user.name "GitHub Actions"
+
+            # Commit and push changes
+            git add argocd/values.yaml
+            git commit -m "Update values.yaml for release $TAG"
+            git push origin cd-release
+

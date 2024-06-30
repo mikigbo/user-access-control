@@ -8,14 +8,16 @@ spec:
   source:
     repoURL: 'https://github.com/mikigbo/user-access-control'
     targetRevision: cd-release
-    path: helmchart
+    path: helmchart  # Path to the Helm chart directory
+    helm:
+      valueFiles:
+        - ../argocd/values.yaml  # Path to the custom values.yaml relative to the chart
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: appnamespace
+    namespace: app_namespace
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-  revisionHistoryLimit: 2
