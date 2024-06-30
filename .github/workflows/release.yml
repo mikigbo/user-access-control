@@ -45,25 +45,35 @@ jobs:
       - name: delete vulnerability file
         run: rm trivy-report.json
 
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GHCR_PAT }}
+
+      - name: Push Docker image to GitHub Container Registry
+        run: docker push ghcr.io/${{ github.repository_owner }}/user-access:${{ github.event.release.tag_name }}
+
 
       - name: Update values.yaml with release tag
         run: |
             TAG=$(echo "${{ github.event.release.tag_name }}")
+
+            # Configure Git
+            git config user.email "actions@github.com"
+            git config user.name "GitHub Actions"
             
             # Fetch and checkout branches
             git fetch origin
             git checkout cd-release
             git pull origin cd-release
 
-            # Merge main into cd-release
-            git merge origin/main
+            # Merge main into cd-release with unrelated histories allowed
+            git merge origin/main --allow-unrelated-histories
 
             # Update the tag in values.yaml
             sed -i "s/tag: .*/tag: \"$TAG\"/" argocd/values.yaml
-
-            # Configure Git
-            git config user.email "actions@github.com"
-            git config user.name "GitHub Actions"
 
             # Commit and push changes
             git add argocd/values.yaml
