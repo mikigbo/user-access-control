@@ -5,6 +5,7 @@ metadata:
   labels:
     app: {{ .Release.Name }}
 spec:
+  serviceAccountName: github-service-account
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
