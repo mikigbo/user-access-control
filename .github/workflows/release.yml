@@ -65,8 +65,8 @@ jobs:
             git checkout cd-release
             git pull origin cd-release
 
-            # Merge main into cd-release
-            git merge origin/main
+            # Merge main into cd-release with unrelated histories allowed
+            git merge origin/main --allow-unrelated-histories
 
             # Update the tag in values.yaml
             sed -i "s/tag: .*/tag: \"$TAG\"/" argocd/values.yaml
