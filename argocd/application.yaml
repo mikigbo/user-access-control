@@ -14,7 +14,7 @@ spec:
         - ../argocd/values.yaml  # Path to the custom values.yaml relative to the chart
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: app_namespace
+    namespace: managerapp
   syncPolicy:
     automated:
       prune: true
