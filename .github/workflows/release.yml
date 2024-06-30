@@ -43,10 +43,11 @@ jobs:
 
       - name: Update values.yaml with release tag
         run: |
-          TAG=$(echo "${{ github.event.release.tag_name }}")
-          git checkout cd-release
-          git pull origin cd-release
-          sed -i "s/tag: .*/tag: \"$TAG\"/" argocd/values.yaml
-          git add .
-          git commit -m "Update values.yaml for release $TAG"
-          git push origin cd-release
+            TAG=$(echo "${{ github.event.release.tag_name }}")
+            git fetch origin
+            git checkout cd-release
+            git pull origin cd-release
+            sed -i "s/tag: .*/tag: \"$TAG\"/" argocd/values.yaml
+            git add .
+            git commit -m "Update values.yaml for release $TAG"
+            git push origin cd-release
